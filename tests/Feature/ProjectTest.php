@@ -32,6 +32,18 @@ class ProjectTest extends TestCase
     }
 
 
+   /** @test */
+    public function a_project_require_a_title()
+    {
+        $attribute = Project::factory()->raw(['title'=>'']);
+
+        $this->post('/project',$attribute)->assertSessionHasErrors('title');
+    }
+
+    public function test_a_project_required_a_description()
+    {
+        $this->post('/project' ,[])->assertSessionHasErrors('description');
+    }
 }
 
 

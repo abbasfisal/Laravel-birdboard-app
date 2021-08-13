@@ -10,17 +10,16 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
-        return view('project.index' , compact('projects'));
+        return view('project.index', compact('projects'));
     }
 
     public function store()
     {
-        //validate
 
-        //persist
-        Project::query()->create(request(['title', 'description']));
+        $attributes = \request()->validate(['title' => 'required', 'description' => 'required']);
 
-        //redirect
+        Project::query()->create($attributes);
+
         return redirect('/project');
     }
 }
