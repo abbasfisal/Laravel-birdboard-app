@@ -22,4 +22,14 @@ class ProjectController extends Controller
 
         return redirect('/project');
     }
+
+    public function show(Project $project)
+    {
+
+        //$project = Project::find($id);
+
+        return view('project.show', compact('project'));
+
+
+    }
 }
