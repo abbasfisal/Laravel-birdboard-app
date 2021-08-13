@@ -15,8 +15,6 @@ class ProjectTest extends TestCase
     public function test_it_has_a_path()
     {
 
-
-
         $project = Project::factory()->create();
 
         $this->assertEquals('/project/' . $project->id, $project->path());
