@@ -24,16 +24,17 @@
                 {{--tasks--}}
                 <div class="gap-2 d-grid ">
                     <b>tasks</b>
-                    <div class="card shadow-1-secondary p-3 border ripple hover-shadow">New Task one</div>
-                    <div class="card shadow-1-secondary p-3 border">New Task one</div>
-                    <div class="card shadow-1-secondary p-3 border">New Task one</div>
-                    <div class="card shadow-1-secondary p-3 border">New Task one</div>
-                    <div class="card shadow-1-secondary p-3 border">New Task one</div>
+                    @forelse($project->tasks as $task)
+                        <div class="card shadow-1-secondary p-3 border ripple hover-shadow">
+                            {{$task->body}}
+                        </div>
+
+                    @endforelse
                 </div>
                 {{--end tasks--}}
                 <div class="mt-5">
                     <h5 class="text-muted">General Notes</h5>
-                    <textarea class="card w-100"  style="min-height: 200px"> </textarea>
+                    <textarea class="card w-100" style="min-height: 200px"> </textarea>
                 </div>
             </div>
             {{-- end left side--}}
