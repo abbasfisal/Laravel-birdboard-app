@@ -19,7 +19,12 @@
                         <span class=" alert-danger form-control mt-3 d-block">error show</span>
 
                         <hr>
-                        <button type="submit" class="btn btn-primary shadow mx-auto d-flex ">Create New</button>
+                        <div class="d-flex justify-content-center ">
+                            <a href="/project" class="btn btn-danger shadow ">Cancle</a>
+                            <div class="col-1"></div>
+                            <button type="submit" class="btn btn-primary shadow ">Create New</button>
+
+                        </div>
                     </div>
                 </form>
             </div>
