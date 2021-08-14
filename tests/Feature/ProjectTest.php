@@ -8,30 +8,29 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProjectTest extends TestCase
+class ManageProjectTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
 
-    public function test_guest_can_not_create_a_project()
+
+    public function test_guest_can_not_manage_project()
     {
-        $attributes = Project::factory()->raw();
-
-        $res = $this->post('/project', $attributes)
-            ->assertRedirect('login');
-    }
 
 
-    public function test_guest_may_not_view_a_project()
-    {
-        $this->get('/project')->assertRedirect('login');
-    }
-
-    public function test_guest_can_not_view_a_single_project()
-    {
+        $this->get('/project/create')->assertStatus(200);
         $project = Project::factory()->create();
+
+        $this->get('/project')->assertRedirect('login');
+
         $this->get($project->path())->assertRedirect('login');
+
+        $this->post('/project', $project->toArray())
+            ->assertRedirect('login');
+
+
     }
+
 
     /** @test */
     public function a_user_can_create_a_project()
@@ -81,7 +80,7 @@ class ProjectTest extends TestCase
 
         //$this->withoutExceptionHandling();
 
-        $project = Project::factory()->create(['user_id'=>auth()->id()]);
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->get($project->path())
             ->assertSee($project->title)
@@ -92,7 +91,7 @@ class ProjectTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-      //  $this->withoutExceptionHandling();
+        //  $this->withoutExceptionHandling();
 
         $project = Project::factory()->create();
 

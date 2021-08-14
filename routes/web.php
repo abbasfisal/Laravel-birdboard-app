@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::group(['middleware'=>'auth'],function(){
 
+    Route::get('/project/create' , [ProjectController::class , 'create']);
     Route::post('/project', [ProjectController::class, 'store']);
     Route::get('/project', [ProjectController::class, 'index']);
     Route::get('/project/{project}' , [ProjectController::class , 'show']);
