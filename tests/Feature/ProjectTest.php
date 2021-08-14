@@ -13,20 +13,24 @@ class ProjectTest extends TestCase
     use WithFaker, RefreshDatabase;
 
 
-    public function test_only_authenticated_user_can_create_project()
+    public function test_guest_can_not_create_a_project()
     {
-
-        //$this->withoutExceptionHandling();
-        //اگر پروژه یک صاب نداش خطا بده
-
-        //$attributes = Project::factory()->raw(['user_id'=>null]);
-
-
         $attributes = Project::factory()->raw();
 
-        $this->post('/project', $attributes)
+        $res = $this->post('/project', $attributes)
             ->assertRedirect('login');
+    }
 
+
+    public function test_guest_may_not_view_a_project()
+    {
+        $this->get('/project')->assertRedirect('login');
+    }
+
+    public function test_guest_can_not_view_a_single_project()
+    {
+        $project = Project::factory()->create();
+        $this->get($project->path())->assertRedirect('login');
     }
 
     /** @test */
@@ -34,11 +38,11 @@ class ProjectTest extends TestCase
     {
 
         $this->withoutExceptionHandling();
+
         $this->actingAs(User::factory()->create());
 
 
         $data = [
-
             'title' => $this->faker->title,
             'description' => $this->faker->paragraph
         ];
@@ -70,20 +74,32 @@ class ProjectTest extends TestCase
     }
 
 
-    public function test_a_user_can_view_a_project()
+    public function test_a_user_can_view_their_project()
     {
-        //create project in db then catch it from db
-        //go to view and see those data
 
-        $this->withoutExceptionHandling();
+        $this->actingAs(User::factory()->create());
 
-        $project = Project::factory()->create();
+        //$this->withoutExceptionHandling();
+
+        $project = Project::factory()->create(['user_id'=>auth()->id()]);
 
         $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
     }
 
+    public function test_an_authenticated_user_can_not_view_the_project_of_others()
+    {
+        $this->actingAs(User::factory()->create());
+
+      //  $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        $this->get($project->path())
+            ->assertStatus(403);
+
+    }
 
 }
 
