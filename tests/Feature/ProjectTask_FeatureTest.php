@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Facades\Setup\ProjectFactory_Setup;
 use Tests\TestCase;
 
 class ProjectTask_FeatureTest extends TestCase
@@ -27,19 +29,27 @@ class ProjectTask_FeatureTest extends TestCase
     public function test_a_project_can_update_task()
     {
         //$this->withoutExceptionHandling();
-        $this->signIn();
+
+        /*$this->signIn();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
 
-        $task = $project->addTask('test Task');
+        $task = $project->addTask('test Task');*/
 
-        $this->patch($task->path(), [
+        $project =
+            ProjectFactory_Setup::
+            ownedBy($this->signIn())
+                ->withTasks(1)
+                ->create();
+
+
+        $this->patch($project->tasks()->first()->path(), [
             'body' => 'changed',
             'completed' => true
         ]);
-        $this->assertDatabaseHas(Task::class , [
-            'body'=>'changed' ,
-            'completed'=>true
+        $this->assertDatabaseHas(Task::class, [
+            'body' => 'changed',
+            'completed' => true
         ]);
     }
 
@@ -47,11 +57,16 @@ class ProjectTask_FeatureTest extends TestCase
     {
         $this->signIn();
 
-        $project = auth()->user()->projects()->create(Project::factory()->raw());
+        $project = auth()->user()
+            ->projects()->create(Project::factory()->raw());
 
-        $attribute = Task::factory()->raw(['body' => '', 'project_id' => $project->id]);
+        $attribute = Task::factory()->raw([
+            'body' => '',
+            'project_id' => $project->id
+        ]);
 
-        $this->post($project->path() . '/tasks', $attribute)->assertSessionHasErrors('body');
+        $this->post($project->path() . '/tasks', $attribute)
+            ->assertSessionHasErrors('body');
 
     }
 
@@ -70,15 +85,14 @@ class ProjectTask_FeatureTest extends TestCase
 
     public function test_only_owner_of_project_can_update_tasks()
     {
-        //$this->withoutExceptionHandling();
-        $this->signIn();
 
-        $project = Project::factory()->create();
-        $task =$project->addTask('test Task');
+        $project =
+            ProjectFactory_Setup::withTasks(1)
+                ->create();
 
-        $this->patch($task->path(),[
-            'body'=>'changed'
-
-        ])->assertStatus(403);
+        $this->actingAs($this->signIn())
+            ->patch($project->tasks()->first()->path(), [
+                'body' => 'changed'
+            ])->assertStatus(403);
     }
 }

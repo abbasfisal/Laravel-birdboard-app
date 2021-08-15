@@ -34,7 +34,6 @@ class Project_FeatureTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-
         $this->signIn();
 
         $data = [
