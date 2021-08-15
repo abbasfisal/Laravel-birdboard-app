@@ -15,16 +15,15 @@ class ProjectController extends Controller
 
     public function store()
     {
-
-
         $attributes = \request()->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'notes' => 'min:3'
         ]);
 
         //$attributes['user_id'] = auth()->id();
 
-       $project =  auth()->user()->projects()->create($attributes);
+        $project = auth()->user()->projects()->create($attributes);
 
         //Project::query()->create($attributes);
 
@@ -33,17 +32,24 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $this->authorize('view',$project);
-        /*if(auth()->user()->isNot($project->user))
-            ort(403 );*/
+        $this->authorize('view', $project);
 
         return view('project.show', compact('project'));
-
-
     }
 
     public function create()
     {
         return view('project.create');
+    }
+
+    public function update(Project $project)
+    {
+
+        $this->authorize('update', $project);
+
+        $project->update(\request(['notes']));
+
+        return redirect($project->path());
+
     }
 }

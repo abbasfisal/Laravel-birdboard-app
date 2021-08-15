@@ -60,10 +60,19 @@
                     @endforelse
                 </div>
                 {{--end tasks--}}
+
+                {{-- general notes--}}
                 <div class="mt-5">
-                    <h5 class="text-muted">General Notes</h5>
-                    <textarea class="card w-100" style="min-height: 200px"> </textarea>
+                    <form action="{{$project->path()}}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <h5 class="text-muted">General Notes</h5>
+                        <textarea name="notes" class="card w-100" style="min-height: 200px">{{$project->notes}} </textarea>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Save Notes</button>
+                    </form>
+
                 </div>
+                {{-- /genral notes--}}
             </div>
             {{-- end left side--}}
 

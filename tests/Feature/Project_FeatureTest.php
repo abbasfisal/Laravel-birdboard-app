@@ -13,7 +13,6 @@ class Project_FeatureTest extends TestCase
     use WithFaker, RefreshDatabase;
 
 
-
     public function test_guest_can_not_manage_project()
     {
 
@@ -33,23 +32,39 @@ class Project_FeatureTest extends TestCase
     public function a_user_can_create_a_project()
     {
 
-       // $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
 
         $this->signIn();
 
         $data = [
             'title' => $this->faker->title,
-            'description' => $this->faker->paragraph
+            'description' => $this->faker->paragraph,
+            'notes' => 'genral notes'
         ];
 
         $this->post('/project', $data);
 
         $this->assertDatabaseHas(Project::class, $data);
 
-       // $this->get('/project')->assertSee($data['title']);
+        // $this->get('/project')->assertSee($data['title']);
     }
 
+    public function test_a_project_can_be_updated()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+            'notes' => 'changed'
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas(Project::class, ['notes' => 'changed']);
+    }
 
     /** @test */
     public function a_project_require_a_title()
@@ -94,6 +109,16 @@ class Project_FeatureTest extends TestCase
 
     }
 
+    public function test_an_authenticated_user_can_not_update_the_project_of_others()
+    {
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $this->patch($project->path() , ['notes'=>'changed'])
+            ->assertStatus(403);
+
+    }
 }
 
 
