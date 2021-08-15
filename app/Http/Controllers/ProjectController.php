@@ -13,6 +13,20 @@ class ProjectController extends Controller
         return view('project.index', compact('projects'));
     }
 
+
+    public function create()
+    {
+        return view('project.create');
+    }
+
+
+    public function show(Project $project)
+    {
+        $this->authorize('view', $project);
+
+        return view('project.show', compact('project'));
+    }
+
     public function store()
     {
         $attributes = \request()->validate([
@@ -30,26 +44,30 @@ class ProjectController extends Controller
         return redirect($project->path());
     }
 
-    public function show(Project $project)
-    {
-        $this->authorize('view', $project);
 
-        return view('project.show', compact('project'));
+    public function edit(Project $project)
+    {
+        return view('project.edit', compact('project'));
     }
 
-    public function create()
-    {
-        return view('project.create');
-    }
 
     public function update(Project $project)
     {
-
         $this->authorize('update', $project);
 
-        $project->update(\request(['notes']));
+
+        $attributes = \request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'notes' => 'min:3'
+        ]);
+
+
+        $project->update($attributes);
 
         return redirect($project->path());
 
     }
+
+
 }

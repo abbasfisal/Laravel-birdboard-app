@@ -22,6 +22,8 @@ class Project_FeatureTest extends TestCase
 
         $this->get($project->path())->assertRedirect('login');
 
+        $this->get($project->path().'/edit')->assertRedirect('login');
+
         $this->post('/project', $project->toArray())
             ->assertRedirect('login');
 
@@ -49,20 +51,21 @@ class Project_FeatureTest extends TestCase
         // $this->get('/project')->assertSee($data['title']);
     }
 
-    public function test_a_project_can_be_updated()
+    public function test_a_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
+       // $this->withoutExceptionHandling();
 
         $this->signIn();
 
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
 
-        $this->patch($project->path(), [
-            'notes' => 'changed'
-        ])->assertRedirect($project->path());
+        $this->patch($project->path(), $attributes =['notes' => 'changed' ,'description'=>'chnaged', 'title'=>'changed' ])
+            ->assertRedirect($project->path());
 
-        $this->assertDatabaseHas(Project::class, ['notes' => 'changed']);
+        $this->get($project->path().'/edit')->assertOk();
+
+        $this->assertDatabaseHas(Project::class,$attributes);
     }
 
     /** @test */

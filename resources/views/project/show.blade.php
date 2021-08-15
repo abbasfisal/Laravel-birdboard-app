@@ -9,9 +9,9 @@
                     <div class=" align-items-center">
                         <span class="text-muted"><b>My project / {{$project->title}}</b></span>
                     </div>
-                    <a href="/project/"
+                    <a href="{{$project->path().'/edit'}}"
                        class="btn btn-primary ">
-                        back</a>
+                        Edit Project</a>
                 </section>
             </div>
         </div>
