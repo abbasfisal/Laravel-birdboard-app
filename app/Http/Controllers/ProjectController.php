@@ -24,11 +24,11 @@ class ProjectController extends Controller
 
         //$attributes['user_id'] = auth()->id();
 
-        auth()->user()->projects()->create($attributes);
+       $project =  auth()->user()->projects()->create($attributes);
 
         //Project::query()->create($attributes);
 
-        return redirect('/project');
+        return redirect($project->path());
     }
 
     public function show(Project $project)

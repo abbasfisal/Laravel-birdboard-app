@@ -4,11 +4,10 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class UserTest extends TestCase
+class User_UnitTest extends TestCase
 {
     use RefreshDatabase;
 

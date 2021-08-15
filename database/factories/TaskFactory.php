@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,8 +24,8 @@ class TaskFactory extends Factory
     public function definition()
     {
         return [
-            'project_id'=>User::all()->random()->id,
-            'body'=>$this->faker->paragraph
+            'project_id'=>Project::factory() ,
+            'body'=>$this->faker->sentence(150)
         ];
     }
 }

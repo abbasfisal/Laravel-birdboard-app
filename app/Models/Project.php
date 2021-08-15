@@ -9,6 +9,8 @@ class Project extends Model
 {
     use HasFactory;
 
+
+
     protected $guarded = [];
 
     public function path()
@@ -29,5 +31,7 @@ class Project extends Model
     {
         return $this->tasks()->create(compact('body'));
     }
+
+
 }
 

@@ -30,6 +30,8 @@
                             </p>
                         </div>
 
+                       <span> &nbsp;<i class="fas fa-clipboard-check fa-sm text-muted    "></i>
+                           <strong class="small">{{$project->tasks->count()}}</strong></span>
                     </div>
                 </div>
             @empty

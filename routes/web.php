@@ -20,6 +20,7 @@ Route::group(['middleware'=>'auth'],function(){
 
     //tasks
     Route::post('/project/{project}/tasks',[ProjectTasksController::class , 'store']);
+    Route::patch('/project/{project}/tasks/{task}',[ProjectTasksController::class , 'update']);
 });
 
 Auth::routes();

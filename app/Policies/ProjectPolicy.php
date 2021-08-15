@@ -40,9 +40,9 @@ class ProjectPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user , Project $project)
     {
-        //
+        return  $user->id == $project->user_id;
     }
 
     /**
@@ -54,7 +54,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project)
     {
-        //
+        return $user->id == $project->user_id;
     }
 
     /**

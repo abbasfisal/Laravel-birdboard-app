@@ -24,11 +24,39 @@
                 {{--tasks--}}
                 <div class="gap-2 d-grid ">
                     <b>tasks</b>
+
+                    {{-- create new Task--}}
+                    <div class="card shadow-1-secondary p-3">
+                        <form action="{{$project->path().'/tasks'}}" method="Post">
+                            @csrf
+                            @method('POST')
+                            <input type="text" name="body" class="form-control" placeholder="Enter New Task"/>
+                        </form>
+                    </div>
+                    {{-- /create new Task--}}
+
                     @forelse($project->tasks as $task)
                         <div class="card shadow-1-secondary p-3 border ripple hover-shadow">
-                            {{$task->body}}
-                        </div>
 
+                            <form action="{{$project->path().'/tasks/'.$task->id}}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="text" name="body"
+                                           class="border-0 w-75 {{$task->completed ? 'text-muted' : null}}"
+                                           value="{{$task->body}}"/>
+
+                                    <input type="checkbox"
+                                           name="completed"
+                                           onchange="this.form.submit()"
+                                           {{$task->completed ? 'checked' : null}}
+                                           class="form-check-input "
+                                    >
+                                </div>
+                            </form>
+                        </div>
+                    @empty
+                        <h3>No Tasks Yet</h3>
                     @endforelse
                 </div>
                 {{--end tasks--}}
