@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Task;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Facades\Setup\ProjectFactory_Setup;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProjectTask_FeatureTest extends TestCase
@@ -17,24 +16,15 @@ class ProjectTask_FeatureTest extends TestCase
     {
         // $this->withoutExceptionHandling();
 
-        $this->signIn();
-
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->create();
 
         $this->post($project->path() . '/tasks', ['body' => 'test Task']);
 
         $this->get($project->path())->assertSee('test Task');
     }
 
-    public function test_a_project_can_update_task()
+    public function test_task_can_be_updated()
     {
-        //$this->withoutExceptionHandling();
-
-        /*$this->signIn();
-
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
-
-        $task = $project->addTask('test Task');*/
 
         $project =
             ProjectFactory_Setup::
@@ -42,15 +32,44 @@ class ProjectTask_FeatureTest extends TestCase
                 ->withTasks(1)
                 ->create();
 
+        $data = [
+            'body' => 'changed'
+        ];
 
-        $this->patch($project->tasks()->first()->path(), [
+        $this->patch($project->tasks()->first()->path(), $data);
+        $this->assertDatabaseHas(Task::class, $data);
+    }
+
+    public function test_a_task_can_be_completed()
+    {
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->withTasks(1)->create();
+
+        $data = [
             'body' => 'changed',
             'completed' => true
-        ]);
-        $this->assertDatabaseHas(Task::class, [
+        ];
+
+        $this->patch($project->tasks()->first()->path(), $data);
+
+
+        $this->assertDatabaseHas(Task::class , $data);
+
+    }
+
+    public function test_a_task_can_be_marked_incomplete()
+    {
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->withTasks(1)->create();
+
+        $data = [
             'body' => 'changed',
-            'completed' => true
-        ]);
+            'completed' => false
+        ];
+
+        $this->patch($project->tasks()->first()->path(), $data);
+
+
+        $this->assertDatabaseHas(Task::class , $data);
+
     }
 
     public function test_a_task_require_a_body()

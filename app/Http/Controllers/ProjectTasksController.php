@@ -10,26 +10,32 @@ class ProjectTasksController extends Controller
 {
     public function store(Project $project)
     {
-        $this->authorize('create',$project);
+        $this->authorize('create', $project);
 
         \request()->validate([
-            'body'=>'required'
+            'body' => 'required'
         ]);
 
-         $project->addTask(\request('body'));
+        $project->addTask(\request('body'));
 
-        return redirect($project->path() );
+        return redirect($project->path());
     }
 
     public function update(Project $project, Task $task)
     {
 
-        $this->authorize('update',$project);
+        $this->authorize('update', $project);
 
-        $task->update([
-            'body'=>\request()->get('body'),
-            'completed'=>\request()->has('completed')
+        $attributes = \request()->validate([
+            'body' => 'required'
         ]);
+
+        $task->update($attributes);
+
+        $method = \request('completed') ? 'complete' : 'incomplete' ;
+
+        $task->$method(); // call complete() | incomplete() method
+
 
         return redirect($project->path());
     }

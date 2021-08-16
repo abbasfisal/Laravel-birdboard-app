@@ -9,15 +9,15 @@ class Project extends Model
 {
     use HasFactory;
 
-
-
     protected $guarded = [];
 
-    public function path()
-    {
-        return "/project/{$this->id}";
-    }
+    //--------------------------
 
+
+
+    /******************
+     *  Relations
+     * *****************/
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -27,15 +27,36 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
-    public function addTask($body)
-    {
-        return $this->tasks()->create(compact('body'));
-    }
-
 
     public function activity()
     {
         return $this->hasMany(Activity::class);
     }
+
+    /***********************
+     * Method`s
+     **********************/
+
+    public function path()
+    {
+        return "/project/{$this->id}";
+    }
+
+
+    public function addTask($body)
+    {
+       return $this->tasks()->create(compact('body'));
+    }
+
+    public function recordActivity($description)
+    {
+
+       $this->activity()->create(compact('description'));
+        /*Activity::query()->create([
+            'project_id'=>$this->id ,
+            'description'=>$type
+        ]);*/
+    }
+
 }
 

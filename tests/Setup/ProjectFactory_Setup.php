@@ -15,22 +15,18 @@ class ProjectFactory_Setup
 
     public function withTasks($TaskCount)
     {
-
         $this->TaskCount = $TaskCount;
         return $this;
     }
 
     public function ownedBy( $user = null)
     {
-
         $this->user = $user;
-
         return $this;
     }
 
     public function create()
     {
-
 
         $project = Project::factory()->create([
             'user_id' => $this->user ?? User::factory()

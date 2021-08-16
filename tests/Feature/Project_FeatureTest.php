@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
-use App\Models\User;
+use Facades\Setup\ProjectFactory_Setup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -48,17 +48,15 @@ class Project_FeatureTest extends TestCase
 
         $this->assertDatabaseHas(Project::class, $data);
 
-        // $this->get('/project')->assertSee($data['title']);
     }
 
     public function test_a_user_can_update_a_project()
     {
         // $this->withoutExceptionHandling();
 
-        $this->signIn();
 
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->create();
 
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->patch($project->path(), $attributes = ['notes' => 'changed', 'description' => 'chnaged', 'title' => 'changed'])
             ->assertRedirect($project->path());
@@ -72,14 +70,11 @@ class Project_FeatureTest extends TestCase
     {
 
         $this->withExceptionHandling();
-        $this->signIn();
 
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->create();
 
         $this->patch($project->path(),
             $attributes = ['notes' => 'changed']);
-
-
 
         $this->assertDatabaseHas(Project::class, $attributes);
 
@@ -108,9 +103,8 @@ class Project_FeatureTest extends TestCase
     public function test_a_user_can_view_their_project()
     {
 
-        $this->signIn();
+        $project = ProjectFactory_Setup::ownedBy($this->signIn())->create();
 
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
 
         $this->get($project->path())
             ->assertSee($project->title)
@@ -121,7 +115,7 @@ class Project_FeatureTest extends TestCase
     {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory_Setup::create();
 
         $this->get($project->path())
             ->assertStatus(403);
@@ -132,7 +126,7 @@ class Project_FeatureTest extends TestCase
     {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory_Setup::ownedBy()->create();
 
         $this->patch($project->path(), ['notes' => 'changed'])
             ->assertStatus(403);
