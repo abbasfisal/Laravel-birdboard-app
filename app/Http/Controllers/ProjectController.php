@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class ProjectController extends Controller
 {
@@ -32,7 +34,7 @@ class ProjectController extends Controller
         $attributes = \request()->validate([
             'title' => 'required',
             'description' => 'required',
-            'notes' => 'min:3'
+            'notes' => 'nullable'
         ]);
 
         //$attributes['user_id'] = auth()->id();
@@ -47,23 +49,26 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+
         return view('project.edit', compact('project'));
     }
 
 
-    public function update(Project $project)
+    public function update(UpdateProjectRequest $request , Project $project)
     {
-        $this->authorize('update', $project);
+        //$this->authorize('update', $project);
 
 
-        $attributes = \request()->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3'
-        ]);
+
+       /* $attributes = \request()->validate([
+            'title' => 'sometimes|required',
+            'description' => 'sometimes|required',
+            'notes' => 'nullable'
+        ]);*/
 
 
-        $project->update($attributes);
+
+        $project->update($request->validated());
 
         return redirect($project->path());
 

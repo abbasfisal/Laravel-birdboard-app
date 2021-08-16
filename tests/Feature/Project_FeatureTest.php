@@ -22,7 +22,7 @@ class Project_FeatureTest extends TestCase
 
         $this->get($project->path())->assertRedirect('login');
 
-        $this->get($project->path().'/edit')->assertRedirect('login');
+        $this->get($project->path() . '/edit')->assertRedirect('login');
 
         $this->post('/project', $project->toArray())
             ->assertRedirect('login');
@@ -53,19 +53,36 @@ class Project_FeatureTest extends TestCase
 
     public function test_a_user_can_update_a_project()
     {
-       // $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         $this->signIn();
 
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
 
-        $this->patch($project->path(), $attributes =['notes' => 'changed' ,'description'=>'chnaged', 'title'=>'changed' ])
+        $this->patch($project->path(), $attributes = ['notes' => 'changed', 'description' => 'chnaged', 'title' => 'changed'])
             ->assertRedirect($project->path());
 
-        $this->get($project->path().'/edit')->assertOk();
+        $this->get($project->path() . '/edit')->assertOk();
 
-        $this->assertDatabaseHas(Project::class,$attributes);
+        $this->assertDatabaseHas(Project::class, $attributes);
+    }
+
+    public function test_a_user_can_update_a_projects_general_notes()
+    {
+
+        $this->withExceptionHandling();
+        $this->signIn();
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->patch($project->path(),
+            $attributes = ['notes' => 'changed']);
+
+
+
+        $this->assertDatabaseHas(Project::class, $attributes);
+
     }
 
     /** @test */
@@ -117,7 +134,7 @@ class Project_FeatureTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $this->patch($project->path() , ['notes'=>'changed'])
+        $this->patch($project->path(), ['notes' => 'changed'])
             ->assertStatus(403);
 
     }

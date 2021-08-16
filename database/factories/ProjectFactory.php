@@ -26,8 +26,8 @@ class ProjectFactory extends Factory
             'user_id' => function () {
                 return User::factory()->create()->id;
             },
-            'title' => $this->faker->jobTitle,
-            'description' => $this->faker->paragraph
+            'title' => $this->faker->jobTitle(),
+            'description' => $this->faker->paragraph()
         ];
     }
 }
