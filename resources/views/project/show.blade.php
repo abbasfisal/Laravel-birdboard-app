@@ -67,7 +67,8 @@
                         @csrf
                         @method('PATCH')
                         <h5 class="text-muted">General Notes</h5>
-                        <textarea name="notes" class="card w-100" style="min-height: 200px">{{$project->notes}} </textarea>
+                        <textarea name="notes" class="card w-100"
+                                  style="min-height: 200px">{{$project->notes}} </textarea>
                         <button type="submit" class="btn btn-primary w-100 mt-2">Save Notes</button>
                     </form>
 
@@ -77,8 +78,9 @@
             {{-- end left side--}}
 
             {{--righ side--}}
-            <div class="col-md-3 border">
+            <div class="col-md-3 ">
                 <div class="col">
+
                     <div class="card shadow h-100 ">
                         <div class="card-body">
                             <h5 class='card-title'
@@ -91,6 +93,12 @@
                             </figcaption>
                         </div>
                     </div>
+
+                    {{-- activity card --}}
+                    @include('project.activity.card')
+                    {{--/activity card--}}
+
+
                 </div>
             </div>
             {{--end right side --}}
