@@ -19,25 +19,6 @@ class Task extends Model
     ];
 
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($task) {
-
-            $task->project->recordActivity('created_task');
-
-        });
-
-        /* static::updated(function ($task) {
-
-             if (!$task->completed) return;
-
-
-             $task->project->recordActivity('completed_task');
-         });*/
-
-    }
 
     /**********************
      * Relation
@@ -69,6 +50,8 @@ class Task extends Model
     public function incomplete()
     {
         $this->update(['completed' => false]);
+        $this->project->recordActivity('uncompleted_task');
+
     }
 
 }
