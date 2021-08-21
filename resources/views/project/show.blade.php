@@ -7,7 +7,9 @@
             <div class="col-8 mx-auto ">
                 <section class="d-flex mr-5 justify-content-between align-items-center">
                     <div class=" align-items-center">
-                        <span class="text-muted"><b>My project / {{$project->title}}</b></span>
+                        <span class="text-muted"><b>
+                                <a href="/project"> My project /</a>
+                                {{$project->title}}</b></span>
                     </div>
                     <a href="{{$project->path().'/edit'}}"
                        class="btn btn-primary ">

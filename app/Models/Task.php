@@ -19,13 +19,19 @@ class Task extends Model
     ];
 
 
-
     /**********************
      * Relation
      * ********************/
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+
+    public function activity()
+    {
+        //subject is name of method in the activity model
+        return $this->morphMany(Activity::class, 'subject')->latest();
     }
 
 
@@ -50,7 +56,18 @@ class Task extends Model
     public function incomplete()
     {
         $this->update(['completed' => false]);
-        $this->project->recordActivity('uncompleted_task');
+        $this->recordActivity('uncompleted_task');
+
+    }
+
+
+    public function recordActivity($description)
+    {
+
+        $this->activity()->create([
+            'project_id' => $this->project_id,
+            'description' => $description
+        ]);
 
     }
 
